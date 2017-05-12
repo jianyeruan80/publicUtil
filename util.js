@@ -229,3 +229,54 @@ Array.prototype.contains = function(e)
      }
     return false;
 } 
+
+function isScrolledIntoView(el) {
+    var elemTop = el.getBoundingClientRect().top;
+    var elemBottom = el.getBoundingClientRect().bottom;
+
+    var isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight);
+    return isVisible;
+}
+function visibleInContainer(p, e) {
+        var z = p.getBoundingClientRect();
+        var r = e.getBoundingClientRect();
+
+        // Check style visiblilty and off-limits
+        return e.style.opacity > 0 && e.style.display !== 'none' &&
+               e.style.visibility !== 'hidden' &&
+               !(r.top > z.bottom || r.bottom < z.top ||
+                 r.left > z.right || r.right < z.left);
+    }
+var visibleY = function(el){
+  var rect = el.getBoundingClientRect(), top = rect.top, height = rect.height, 
+    el = el.parentNode;
+  do {
+    rect = el.getBoundingClientRect();
+    if (top <= rect.bottom === false) return false;
+    // Check if the element is out of view due to a container scrolling
+    if ((top + height) <= rect.top) return false
+    el = el.parentNode;
+  } while (el != document.body);
+  // Check its within the document viewport
+  return top <= document.documentElement.clientHeight;
+};
+function isInViewport(element) {
+  var rect = element.getBoundingClientRect();
+  var html = document.documentElement;
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || html.clientHeight) &&
+    rect.right <= (window.innerWidth || html.clientWidth)
+  );
+}
+  window.onload=function()
+        {
+            var inputs=document.getElementsByTagName("input");
+            for (var i=0;i<inputs.length; i++) { 
+                if(inputs[i].getAttribute("type")=="text")
+                 inputs[i].onkeyup=function(){
+                    this.value=this.value.replace(/(^\s+)|\s+$/g,"");
+                 };
+            } 
+   //https://github.com/toutouge/WebProject   
